@@ -21,6 +21,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 )
 
@@ -29,13 +31,13 @@ func TestHipchatInit(t *testing.T) {
 	expectedError := fmt.Errorf(hipchatErrMsg, "Missing hipchat token or room")
 
 	var Tests = []struct {
-		hipchat config.Hipchat
+		hipchat v1alpha1.Hipchat
 		err     error
 	}{
-		{config.Hipchat{Token: "foo", Room: "bar"}, nil},
-		{config.Hipchat{Token: "foo"}, expectedError},
-		{config.Hipchat{Room: "bar"}, expectedError},
-		{config.Hipchat{}, expectedError},
+		{v1alpha1.Hipchat{Token: "foo", Room: "bar"}, nil},
+		{v1alpha1.Hipchat{Token: "foo"}, expectedError},
+		{v1alpha1.Hipchat{Room: "bar"}, expectedError},
+		{v1alpha1.Hipchat{}, expectedError},
 	}
 
 	for _, tt := range Tests {

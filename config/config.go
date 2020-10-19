@@ -24,6 +24,8 @@ import (
 	"path/filepath"
 	"runtime"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	nyaml "github.com/ghodss/yaml"
 	"gopkg.in/yaml.v3"
 )
@@ -38,13 +40,13 @@ var (
 
 // Handler contains handler configuration
 type Handler struct {
-	Slack      Slack      `json:"slack"`
-	Hipchat    Hipchat    `json:"hipchat"`
-	Mattermost Mattermost `json:"mattermost"`
-	Flock      Flock      `json:"flock"`
-	Webhook    Webhook    `json:"webhook"`
-	MSTeams    MSTeams    `json:"msteams"`
-	SMTP       SMTP       `json:"smtp"`
+	Slack      v1alpha1.Slack      `json:"slack"`
+	Hipchat    v1alpha1.Hipchat    `json:"hipchat"`
+	Mattermost v1alpha1.Mattermost `json:"mattermost"`
+	Flock      v1alpha1.Flock      `json:"flock"`
+	Webhook    v1alpha1.Webhook    `json:"webhook"`
+	MSTeams    v1alpha1.MSTeams    `json:"msteams"`
+	SMTP       v1alpha1.SMTP       `json:"smtp"`
 }
 
 // Resource contains resource configuration
@@ -90,82 +92,6 @@ type TypedReference struct {
 
 	// Kind of the referenced object.
 	Kind string `json:"kind"`
-}
-
-// Slack contains slack configuration
-type Slack struct {
-	// Slack "legacy" API token.
-	Token string `json:"token"`
-	// Slack channel.
-	Channel string `json:"channel"`
-	// Title of the message.
-	Title string `json:"title"`
-}
-
-// Hipchat contains hipchat configuration
-type Hipchat struct {
-	// Hipchat token.
-	Token string `json:"token"`
-	// Room name.
-	Room string `json:"room"`
-	// URL of the hipchat server.
-	Url string `json:"url"`
-}
-
-// Mattermost contains mattermost configuration
-type Mattermost struct {
-	Channel  string `json:"room"`
-	Url      string `json:"url"`
-	Username string `json:"username"`
-}
-
-// Flock contains flock configuration
-type Flock struct {
-	// URL of the flock API.
-	Url string `json:"url"`
-}
-
-// Webhook contains webhook configuration
-type Webhook struct {
-	// Webhook URL.
-	Url string `json:"url"`
-}
-
-// MSTeams contains MSTeams configuration
-type MSTeams struct {
-	// MSTeams API Webhook URL.
-	WebhookURL string `json:"webhookurl"`
-}
-
-// SMTP contains SMTP configuration.
-type SMTP struct {
-	// Destination e-mail address.
-	To string `json:"to" yaml:"to,omitempty"`
-	// Sender e-mail address .
-	From string `json:"from" yaml:"from,omitempty"`
-	// Smarthost, aka "SMTP server"; address of server used to send email.
-	Smarthost string `json:"smarthost" yaml:"smarthost,omitempty"`
-	// Subject of the outgoing emails.
-	Subject string `json:"subject" yaml:"subject,omitempty"`
-	// Extra e-mail headers to be added to all outgoing messages.
-	Headers map[string]string `json:"headers" yaml:"headers,omitempty"`
-	// Authentication parameters.
-	Auth SMTPAuth `json:"auth" yaml:"auth,omitempty"`
-	// If "true" forces secure SMTP protocol (AKA StartTLS).
-	RequireTLS bool `json:"requireTLS" yaml:"requireTLS"`
-	// SMTP hello field (optional)
-	Hello string `json:"hello" yaml:"hello,omitempty"`
-}
-
-type SMTPAuth struct {
-	// Username for PLAN and LOGIN auth mechanisms.
-	Username string `json:"username" yaml:"username,omitempty"`
-	// Password for PLAIN and LOGIN auth mechanisms.
-	Password string `json:"password" yaml:"password,omitempty"`
-	// Identity for PLAIN auth mechanism
-	Identity string `json:"identity" yaml:"identity,omitempty"`
-	// Secret for CRAM-MD5 auth mechanism
-	Secret string `json:"secret" yaml:"secret,omitempty"`
 }
 
 // New creates new config object

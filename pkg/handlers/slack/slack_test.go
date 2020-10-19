@@ -21,6 +21,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 )
 
@@ -29,13 +31,13 @@ func TestSlackInit(t *testing.T) {
 	expectedError := fmt.Errorf(slackErrMsg, "Missing slack token or channel")
 
 	var Tests = []struct {
-		slack config.Slack
+		slack v1alpha1.Slack
 		err   error
 	}{
-		{config.Slack{Token: "foo", Channel: "bar"}, nil},
-		{config.Slack{Token: "foo"}, expectedError},
-		{config.Slack{Channel: "bar"}, expectedError},
-		{config.Slack{}, expectedError},
+		{v1alpha1.Slack{Token: "foo", Channel: "bar"}, nil},
+		{v1alpha1.Slack{Token: "foo"}, expectedError},
+		{v1alpha1.Slack{Channel: "bar"}, expectedError},
+		{v1alpha1.Slack{}, expectedError},
 	}
 
 	for _, tt := range Tests {

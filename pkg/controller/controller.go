@@ -19,10 +19,7 @@ package controller
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
 	"strings"
-	"syscall"
 	"time"
 
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -77,7 +74,7 @@ type Controller struct {
 }
 
 // Start prepares watchers and run their controllers, then waits for process termination signals
-func Start(conf *config.Config, eventHandler handlers.Handler) {
+func Start(conf *config.Config, eventHandler handlers.Handler, stop chan struct{}) {
 	var kubeClient kubernetes.Interface
 
 	if _, err := rest.InClusterConfig(); err != nil {
@@ -551,10 +548,7 @@ func Start(conf *config.Config, eventHandler handlers.Handler) {
 		go c.Run(stopCh)
 	}
 
-	sigterm := make(chan os.Signal, 1)
-	signal.Notify(sigterm, syscall.SIGTERM)
-	signal.Notify(sigterm, syscall.SIGINT)
-	<-sigterm
+	<-stop
 }
 
 func newResourceController(client kubernetes.Interface, eventHandler handlers.Handler, informer cache.SharedIndexInformer, resourceType string) *Controller {
@@ -569,6 +563,8 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 			logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing add to %v: %s", resourceType, newEvent.key)
 			if err == nil {
 				queue.Add(newEvent)
+			} else {
+				logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing add to %v: %s err %v", resourceType, newEvent.key, err)
 			}
 		},
 		UpdateFunc: func(old, new interface{}) {
@@ -578,6 +574,8 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 			logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing update to %v: %s", resourceType, newEvent.key)
 			if err == nil {
 				queue.Add(newEvent)
+			} else {
+				logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing add to %v: %s err %v", resourceType, newEvent.key, err)
 			}
 		},
 		DeleteFunc: func(obj interface{}) {
@@ -588,6 +586,8 @@ func newResourceController(client kubernetes.Interface, eventHandler handlers.Ha
 			logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing delete to %v: %s", resourceType, newEvent.key)
 			if err == nil {
 				queue.Add(newEvent)
+			} else {
+				logrus.WithField("pkg", "kubewatch-"+resourceType).Infof("Processing add to %v: %s err %v", resourceType, newEvent.key, err)
 			}
 		},
 	})
@@ -690,29 +690,27 @@ func (c *Controller) processItem(newEvent Event) error {
 	case "create":
 		// compare CreationTimestamp and serverStartTime and alert only on latest events
 		// Could be Replaced by using Delta or DeltaFIFO
-		if objectMeta.CreationTimestamp.Sub(serverStartTime).Seconds() > 0 {
-			switch newEvent.resourceType {
-			case "NodeNotReady":
-				status = "Danger"
-			case "NodeReady":
-				status = "Normal"
-			case "NodeRebooted":
-				status = "Danger"
-			case "Backoff":
-				status = "Danger"
-			default:
-				status = "Normal"
-			}
-			kbEvent := event.Event{
-				Name:      objectMeta.Name,
-				Namespace: newEvent.namespace,
-				Kind:      newEvent.resourceType,
-				Status:    status,
-				Reason:    "Created",
-			}
-			c.eventHandler.Handle(kbEvent)
-			return nil
+		switch newEvent.resourceType {
+		case "NodeNotReady":
+			status = "Danger"
+		case "NodeReady":
+			status = "Normal"
+		case "NodeRebooted":
+			status = "Danger"
+		case "Backoff":
+			status = "Danger"
+		default:
+			status = "Normal"
 		}
+		kbEvent := event.Event{
+			Name:      objectMeta.Name,
+			Namespace: newEvent.namespace,
+			Kind:      newEvent.resourceType,
+			Status:    status,
+			Reason:    "Created",
+		}
+		c.eventHandler.Handle(kbEvent)
+		return nil
 	case "update":
 		/* TODOs
 		- enahace update event processing in such a way that, it send alerts about what got changed.

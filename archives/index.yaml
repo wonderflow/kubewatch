@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  kubewatch:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2020-10-19T22:53:51.823578+08:00"
+    description: A Helm chart for Kubernetes
+    digest: b56738c636fcd4accfbe9b6dff35aa152f3ac10abb77d49be64c09deda8eef73
+    name: kubewatch
+    type: application
+    urls:
+    - https://wonderflow.info/kubewatch/archives/kubewatch-0.1.0.tgz
+    version: 0.1.0
+generated: "2020-10-19T22:53:51.822814+08:00"

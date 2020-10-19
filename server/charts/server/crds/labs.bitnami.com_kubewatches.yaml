@@ -1,0 +1,251 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: kubewatches.labs.bitnami.com
+spec:
+  group: labs.bitnami.com
+  names:
+    categories:
+    - oam
+    kind: KubeWatch
+    listKind: KubeWatchList
+    plural: kubewatches
+    singular: kubewatch
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: KubeWatch is the Schema for the routes API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: KubeWatchSpec defines the desired state of KubeWatch
+            properties:
+              handler:
+                description: Handler contains handler configuration
+                properties:
+                  flock:
+                    description: Flock contains flock configuration
+                    properties:
+                      url:
+                        description: URL of the flock API.
+                        type: string
+                    required:
+                    - url
+                    type: object
+                  hipchat:
+                    description: Hipchat contains hipchat configuration
+                    properties:
+                      room:
+                        description: Room name.
+                        type: string
+                      token:
+                        description: Hipchat token.
+                        type: string
+                      url:
+                        description: URL of the hipchat server.
+                        type: string
+                    required:
+                    - room
+                    - token
+                    - url
+                    type: object
+                  mattermost:
+                    description: Mattermost contains mattermost configuration
+                    properties:
+                      room:
+                        type: string
+                      url:
+                        type: string
+                      username:
+                        type: string
+                    required:
+                    - room
+                    - url
+                    - username
+                    type: object
+                  msteams:
+                    description: MSTeams contains MSTeams configuration
+                    properties:
+                      webhookurl:
+                        description: MSTeams API Webhook URL.
+                        type: string
+                    required:
+                    - webhookurl
+                    type: object
+                  slack:
+                    description: Slack contains slack configuration
+                    properties:
+                      channel:
+                        description: Slack channel.
+                        type: string
+                      title:
+                        description: Title of the message.
+                        type: string
+                      token:
+                        description: Slack "legacy" API token.
+                        type: string
+                    required:
+                    - channel
+                    - title
+                    - token
+                    type: object
+                  smtp:
+                    description: SMTP contains SMTP configuration.
+                    properties:
+                      auth:
+                        description: Authentication parameters.
+                        properties:
+                          identity:
+                            description: Identity for PLAIN auth mechanism
+                            type: string
+                          password:
+                            description: Password for PLAIN and LOGIN auth mechanisms.
+                            type: string
+                          secret:
+                            description: Secret for CRAM-MD5 auth mechanism
+                            type: string
+                          username:
+                            description: Username for PLAN and LOGIN auth mechanisms.
+                            type: string
+                        required:
+                        - identity
+                        - password
+                        - secret
+                        - username
+                        type: object
+                      from:
+                        description: Sender e-mail address .
+                        type: string
+                      headers:
+                        additionalProperties:
+                          type: string
+                        description: Extra e-mail headers to be added to all outgoing
+                          messages.
+                        type: object
+                      hello:
+                        description: SMTP hello field (optional)
+                        type: string
+                      requireTLS:
+                        description: If "true" forces secure SMTP protocol (AKA StartTLS).
+                        type: boolean
+                      smarthost:
+                        description: Smarthost, aka "SMTP server"; address of server
+                          used to send email.
+                        type: string
+                      subject:
+                        description: Subject of the outgoing emails.
+                        type: string
+                      to:
+                        description: Destination e-mail address.
+                        type: string
+                    required:
+                    - auth
+                    - from
+                    - headers
+                    - hello
+                    - requireTLS
+                    - smarthost
+                    - subject
+                    - to
+                    type: object
+                  webhook:
+                    description: Webhook contains webhook configuration
+                    properties:
+                      url:
+                        description: Webhook URL.
+                        type: string
+                    required:
+                    - url
+                    type: object
+                type: object
+              namespace:
+                type: string
+              workloadRef:
+                description: WorkloadReference to the workload whose metrics needs
+                  to be exposed
+                properties:
+                  apiVersion:
+                    description: APIVersion of the referenced object.
+                    type: string
+                  kind:
+                    description: Kind of the referenced object.
+                    type: string
+                  name:
+                    description: Name of the referenced object.
+                    type: string
+                required:
+                - apiVersion
+                - kind
+                type: object
+            required:
+            - handler
+            - workloadRef
+            type: object
+          status:
+            description: WatchStatus defines the observed state of KubeWatch
+            properties:
+              conditions:
+                description: Conditions of the resource.
+                items:
+                  description: A Condition that may apply to a resource.
+                  properties:
+                    lastTransitionTime:
+                      description: LastTransitionTime is the last time this condition
+                        transitioned from one status to another.
+                      format: date-time
+                      type: string
+                    message:
+                      description: A Message containing details about this condition's
+                        last transition from one status to another, if any.
+                      type: string
+                    reason:
+                      description: A Reason for this condition's last transition from
+                        one status to another.
+                      type: string
+                    status:
+                      description: Status of this condition; is it currently True,
+                        False, or Unknown?
+                      type: string
+                    type:
+                      description: Type of this condition. At most one of each condition
+                        type may apply to a resource at any point in time.
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              watching:
+                type: boolean
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

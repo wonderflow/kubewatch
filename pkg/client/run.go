@@ -18,6 +18,9 @@ package client
 
 import (
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/controller"
@@ -34,8 +37,15 @@ import (
 // Run runs the event loop processing with given handler
 func Run(conf *config.Config) {
 
+	stop := make(chan struct{})
+	defer close(stop)
 	var eventHandler = ParseEventHandler(conf)
-	controller.Start(conf, eventHandler)
+	go controller.Start(conf, eventHandler, stop)
+	sigterm := make(chan os.Signal, 1)
+	signal.Notify(sigterm, syscall.SIGTERM)
+	signal.Notify(sigterm, syscall.SIGINT)
+	<-sigterm
+
 }
 
 // ParseEventHandler returns the respective handler object specified in the config file.

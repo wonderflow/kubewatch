@@ -21,6 +21,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 )
 
@@ -29,11 +31,11 @@ func TestWebhookInit(t *testing.T) {
 	expectedError := fmt.Errorf(webhookErrMsg, "Missing Webhook url")
 
 	var Tests = []struct {
-		webhook config.Webhook
+		webhook v1alpha1.Webhook
 		err     error
 	}{
-		{config.Webhook{Url: "foo"}, nil},
-		{config.Webhook{}, expectedError},
+		{v1alpha1.Webhook{Url: "foo"}, nil},
+		{v1alpha1.Webhook{}, expectedError},
 	}
 
 	for _, tt := range Tests {

@@ -38,12 +38,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bitnami-labs/kubewatch/config"
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/mkmik/multierror"
 	"github.com/sirupsen/logrus"
 )
 
-func sendEmail(conf config.SMTP, msg string) error {
+func sendEmail(conf v1alpha1.SMTP, msg string) error {
 	ctx := context.Background()
 
 	host, port, err := net.SplitHostPort(conf.Smarthost)
@@ -224,7 +225,7 @@ func sendEmail(conf config.SMTP, msg string) error {
 	return nil
 }
 
-func auth(conf config.SMTPAuth, host, mechs string) (smtp.Auth, error) {
+func auth(conf v1alpha1.SMTPAuth, host, mechs string) (smtp.Auth, error) {
 	username := conf.Username
 
 	// If no username is set, keep going without authentication.

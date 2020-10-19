@@ -3,11 +3,16 @@ module github.com/bitnami-labs/kubewatch
 go 1.14
 
 require (
+	github.com/crossplane/crossplane-runtime v0.10.0
+	github.com/crossplane/oam-kubernetes-runtime v0.2.2
 	github.com/fatih/structtag v1.2.0
+	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/ghodss/yaml v1.0.0
+	github.com/go-logr/logr v0.1.0
 	github.com/go-logr/zapr v0.1.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/google/go-querystring v0.0.0-20170111101155-53e6ce116135 // indirect
+	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/mkmik/multierror v0.3.0
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/pkg/errors v0.9.1 // indirect

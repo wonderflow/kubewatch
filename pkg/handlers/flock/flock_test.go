@@ -21,6 +21,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 )
 
@@ -29,11 +31,11 @@ func TestFlockInit(t *testing.T) {
 	expectedError := fmt.Errorf(flockErrMsg, "Missing Flock url")
 
 	var Tests = []struct {
-		flock config.Flock
+		flock v1alpha1.Flock
 		err   error
 	}{
-		{config.Flock{Url: "foo"}, nil},
-		{config.Flock{}, expectedError},
+		{v1alpha1.Flock{Url: "foo"}, nil},
+		{v1alpha1.Flock{}, expectedError},
 	}
 
 	for _, tt := range Tests {

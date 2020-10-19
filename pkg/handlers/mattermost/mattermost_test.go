@@ -21,6 +21,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 )
 
@@ -29,17 +31,17 @@ func TestMattermostInit(t *testing.T) {
 	expectedError := fmt.Errorf(mattermostErrMsg, "Missing Mattermost channel, url or username")
 
 	var Tests = []struct {
-		mattermost config.Mattermost
+		mattermost v1alpha1.Mattermost
 		err        error
 	}{
-		{config.Mattermost{Url: "foo", Channel: "bar", Username: "username"}, nil},
-		{config.Mattermost{Url: "foo", Channel: "bar"}, expectedError},
-		{config.Mattermost{Url: "foo", Username: "username"}, expectedError},
-		{config.Mattermost{Channel: "foo", Username: "username"}, expectedError},
-		{config.Mattermost{Url: "foo"}, expectedError},
-		{config.Mattermost{Channel: "bar"}, expectedError},
-		{config.Mattermost{Username: "bar"}, expectedError},
-		{config.Mattermost{}, expectedError},
+		{v1alpha1.Mattermost{Url: "foo", Channel: "bar", Username: "username"}, nil},
+		{v1alpha1.Mattermost{Url: "foo", Channel: "bar"}, expectedError},
+		{v1alpha1.Mattermost{Url: "foo", Username: "username"}, expectedError},
+		{v1alpha1.Mattermost{Channel: "foo", Username: "username"}, expectedError},
+		{v1alpha1.Mattermost{Url: "foo"}, expectedError},
+		{v1alpha1.Mattermost{Channel: "bar"}, expectedError},
+		{v1alpha1.Mattermost{Username: "bar"}, expectedError},
+		{v1alpha1.Mattermost{}, expectedError},
 	}
 
 	for _, tt := range Tests {

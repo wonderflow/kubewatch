@@ -1,0 +1,11 @@
+apiVersion: labs.bitnami.com/v1alpha1
+kind: KubeWatch
+metadata:
+  name: test-watch
+spec:
+  workloadRef:
+    apiVersion: core.oam.dev/v1alpha2
+    kind: ApplicationConfiguration
+  handler:
+    webhook:
+      url: "https://hooks.slack.com/services/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"

@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 )
@@ -18,11 +20,11 @@ func TestInit(t *testing.T) {
 	expectedError := fmt.Errorf(msteamsErrMsg, "Missing MS teams webhook URL")
 
 	var Tests = []struct {
-		ms  config.MSTeams
+		ms  v1alpha1.MSTeams
 		err error
 	}{
-		{config.MSTeams{WebhookURL: "somepath"}, nil},
-		{config.MSTeams{}, expectedError},
+		{v1alpha1.MSTeams{WebhookURL: "somepath"}, nil},
+		{v1alpha1.MSTeams{}, expectedError},
 	}
 
 	for _, tt := range Tests {

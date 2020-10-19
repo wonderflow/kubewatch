@@ -26,6 +26,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/bitnami-labs/kubewatch/api/v1alpha1"
+
 	"github.com/bitnami-labs/kubewatch/config"
 	"github.com/bitnami-labs/kubewatch/pkg/event"
 	"github.com/sirupsen/logrus"
@@ -51,7 +53,7 @@ const (
 // SMTP handler implements handler.Handler interface,
 // Notify event via email.
 type SMTP struct {
-	cfg config.SMTP
+	cfg v1alpha1.SMTP
 }
 
 // Init prepares Webhook configuration
@@ -80,7 +82,7 @@ func formatEmail(e event.Event) (string, error) {
 	return e.Message(), nil
 }
 
-func send(conf config.SMTP, msg string) {
+func send(conf v1alpha1.SMTP, msg string) {
 	if err := sendEmail(conf, msg); err != nil {
 		logrus.Error(err)
 	}
