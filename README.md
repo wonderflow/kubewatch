@@ -1,3 +1,5 @@
+> Note: this is a fork of bitnami-labs/kubewatch which add CRD support and create a controller for it.
+
 <p align="center">
   <img src="./docs/kubewatch-logo.jpeg">
 </p>
